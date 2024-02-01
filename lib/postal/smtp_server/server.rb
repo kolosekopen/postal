@@ -276,21 +276,24 @@ module Postal
         if ENV["PID_FILE"]
           File.write(ENV["PID_FILE"], Process.pid.to_s + "\n")
         end
+
         # If we have been spawned to replace an existing processm shut down the
         # parent after listening.
-        if ENV["SERVER_FD"]
-          listen
-          kill_parent
-        else
-          listen
+        logger.tagged(component: "smtp-server") do
+          if ENV["SERVER_FD"]
+            listen
+            kill_parent
+          else
+            listen
+          end
+          run_event_loop
         end
-        run_event_loop
       end
 
       private
 
       def logger
-        Postal.logger_for(:smtp_server)
+        Postal.logger
       end
 
     end

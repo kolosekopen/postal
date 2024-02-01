@@ -18,6 +18,7 @@ gem "highline", require: false
 gem "execjs", '~> 2.7', "< 2.8"
 gem "jwt"
 gem "kaminari"
+gem "klogger-logger"
 gem "mail"
 gem "moonrope"
 gem "mysql2"

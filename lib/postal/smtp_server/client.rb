@@ -40,16 +40,18 @@ module Postal
       end
 
       def handle(data)
-        if @state == :preauth
-          return proxy(data)
-        end
+        Postal.logger.tagged(id: id) do
+          if @state == :preauth
+            return proxy(data)
+          end
 
-        log "\e[32m<= #{sanitize_input_for_log(data.strip)}\e[0m"
-        if @proc
-          @proc.call(data)
+          log "\e[32m<= #{sanitize_input_for_log(data.strip)}\e[0m"
+          if @proc
+            @proc.call(data)
 
-        else
-          handle_command(data)
+          else
+            handle_command(data)
+          end
         end
       end
 
@@ -98,7 +100,7 @@ module Postal
       def log(text)
         return false unless @logging_enabled
 
-        Postal.logger_for(:smtp_server).debug "[#{id}] #{text}"
+        Postal.logger.debug(text, id: id)
       end
 
       private
